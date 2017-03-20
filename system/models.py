@@ -1,6 +1,6 @@
 from mongoengine import *
-connect(db='<db_name>', host='mongodb://<username>:<password>@<server_address>:<server_port>/<db_name>')
-raise "Configure the MongoDB URI connection address"
+connect(db='app89', host='mongodb://jovial:kajimida1@ds135818.mlab.com:35818/app89')
+# raise "Configure the MongoDB URI connection address"
 
 # example ORM
 class Tasks(DynamicDocument):

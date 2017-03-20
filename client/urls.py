@@ -16,14 +16,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic.base import TemplateView
-from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^client/', include('client.urls', namespace='client')),
-    url(r'^system/', include('system.urls', namespace='system')),
-    url(r'^$', TemplateView.as_view(template_name='home.html')),
-    # url(r'^login/$', TemplateView.as_view(template_name='login.html')),
-    url(r'^login/$', auth_views.login, {'template_name':'login.html'}, name='login'),
+    url(r'$', TemplateView.as_view(template_name='home.html')),
 ]
