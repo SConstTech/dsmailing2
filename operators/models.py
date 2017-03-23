@@ -1,30 +1,31 @@
-# from mongoengine import *
-# connect(db='<db_name>', host='mongodb://<username>:<password>@<server_address>:<server_port>/<db_name>')
+import datetime
+from mongoengine import *
+
+connect('paper_mailing')
+
+
 # raise "Configure the MongoDB URI connection address"
-#
-# # example ORM
-# class Tasks(DynamicDocument):
-#     title = StringField(max_length=200, required=True)
-#     isDone = BooleanField(default=False)
-#
-# class Project(EmbeddedDocument):
-#     name = StringField(max_length=250, required=True)
-#
-#
-# class Client(DynamicDocument):
-#     name = StringField(required=True)
-#     bulstat = StringField(required=True)
-#     projects = EmbeddedDocumentListField('Project')
-#
-# class Criteria(EmbeddedDocument):
-#     type = StringField()
-#     value = StringField()
-#
-# class UndeliveryCause(Document):
-#     type = StringField()
-#     num_type = IntField()
-#
-# class Letters(Document):
-#     project_id = EmbeddedDocumentField('Project')
-#     letter_data = EmbeddedDocumentListField('Criteria')
-#     undelivery = EmbeddedDocumentListField('UndeliveryCause')
+class Projects(DynamicDocument):
+    name = StringField()
+
+
+class Clients(DynamicDocument):
+    name = StringField(required=True)
+    projects = ListField(ReferenceField(Projects))
+
+
+class Letters_values(DynamicEmbeddedDocument):
+    name = StringField()
+    value = StringField()
+
+
+class Letters(DynamicDocument):
+    '''
+    Delivered - доставено
+
+    '''
+    value = ListField(EmbeddedDocumentField(Letters_values))
+    status = StringField(default='Delivered')
+    print_date = DateTimeField()
+    status_date = DateTimeField()
+    client = ReferenceField(Clients)

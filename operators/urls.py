@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic.base import TemplateView
+from operators.views import *
 
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='home_.html'), name='home'),
+    url(r'^$', TemplateView.as_view(template_name='index_operator.html'), name='home'),
+    url(r'add-new-base$', FileImport.as_view(), name='home'),
+
 ]
