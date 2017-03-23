@@ -13,9 +13,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic.base import TemplateView
 from django.contrib.auth import views as auth_views
-from views import *
+from system.views import *
 
 
 urlpatterns = [
-    url(r'$', IndexPageView.as_view(), name='index'),
+    url(r'login$', custom_login, name='login'),
+    url(r'logout$', auth_views.logout,  {'next_page': '/'}, name='logout'),
+    url(r'^$', IndexPageView.as_view(), name='index'),
+
 ]
