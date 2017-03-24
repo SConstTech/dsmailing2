@@ -1,21 +1,22 @@
 from django.core.urlresolvers import reverse
 from django.views.generic.base import *
-from django.contrib.auth import views as auth_views
-from django.contrib.auth import logout
-from django.shortcuts import redirect
-from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import *
+from django.http import *
 from braces.views import *
 
 
-class FileImport(LoginRequiredMixin, GroupRequiredMixin, View ):
-    group_required = 'operator_paper'
+class FileImport(GroupRequiredMixin, View ):
+    group_required = u'paper_operator'
+    # http_method_names = ['GET', 'POST']
 
-    # help functions
-    def is_paper_client(self, user):
-        return user.groups.filter(name='paper_client').exists()
+    def get(self, request):
+        return render(request, template_name='import/import-file.jinja' )
+    def post(self,request):
+        pass
 
-    def is_paper_operator(self, user):
-        return user.groups.filter(name='paper_operator').exists()
 
-    # end help functions
 
+
+class HomeView(GroupRequiredMixin, TemplateView):
+    group_required = 'paper_operator'
+    template_name='index_operator.jinja'

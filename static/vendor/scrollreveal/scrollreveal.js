@@ -150,7 +150,7 @@
 
 
         /**
-         * Check if client supports CSS Transform and CSS Transition.
+         * Check if clients supports CSS Transform and CSS Transition.
          * @return {boolean}
          */
         ScrollReveal.prototype.isSupported = function() {

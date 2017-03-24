@@ -1,5 +1,6 @@
 import datetime
 from mongoengine import *
+from django.utils.translation import ugettext as _
 
 connect('paper_mailing')
 
@@ -25,7 +26,7 @@ class Letters(DynamicDocument):
 
     '''
     value = ListField(EmbeddedDocumentField(Letters_values))
-    status = StringField(default='Delivered')
+    status = StringField(default=_('Delivered'))
     print_date = DateTimeField()
     status_date = DateTimeField()
     client = ReferenceField(Clients)

@@ -20,7 +20,7 @@ from operators.views import *
 
 
 urlpatterns = [
-    url(r'^$', TemplateView.as_view(template_name='index_operator.html'), name='home'),
-    url(r'add-new-base$', FileImport.as_view(), name='home'),
+    url(r'add-new-base$', FileImport.as_view(), name='file-upload'),
+    url(r'^$', HomeView.as_view(), name='home'),
 
 ]

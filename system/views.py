@@ -1,12 +1,12 @@
 from django.core.urlresolvers import reverse
-from django.views.generic.base import RedirectView
+from django.views.generic.base import *
 from django.contrib.auth import views as auth_views
 from django.contrib.auth import logout
-from django.shortcuts import redirect
-from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import *
+from django.http import *
 
 class IndexPageView(RedirectView):
-    permanent = False
+    # permanent = False
 
     # help functions
     def is_paper_client(self, user):
@@ -24,7 +24,8 @@ class IndexPageView(RedirectView):
             elif self.is_paper_operator(self.request.user): #and not is_admin(request.user):
                 return reverse('operators:home')
             else:
-                raise Http404
+                print ('here')
+                return reverse('system:home')
 
 
 def custom_login(request):
