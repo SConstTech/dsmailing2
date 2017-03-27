@@ -21,6 +21,9 @@ from operators.views import *
 
 urlpatterns = [
     url(r'add-new-base$', FileImport.as_view(), name='file-upload'),
+    url(r'preview$', PreviewView.as_view(), name='preview'),
+    url(r'create-client$', ClientCreate.as_view(), name='create-client'),
+    url(r'create-project$', ProjectCreate.as_view(), name='create-project'),
     url(r'^$', HomeView.as_view(), name='home'),
 
 ]

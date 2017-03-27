@@ -1,13 +1,29 @@
 {% extends "index_operator.html" %}
 {% load static %}
 {% block content %}
-
-    <div>
-        <form>
+    <div class="container start panel">
+        <form enctype="multipart/form-data" method="post">
             {% csrf_token %}
-            <input type="file" name="filename" />
+              <select class="form-control" name="project">
+                {% for eachClient in objects_list %}
+                  {% for eachProject in eachClient.projects %}
+                    <option>{{ eachProject.name }}</option>
+                  {% endfor %}
+                {% empty %}
+                    <option>No projects</option>
+                {% endfor %}
+
+
+              </select>
+            <br/>
+            <input type="file" name="filename" class="form-control"/>
+            <br/>
             <button class="btn btn-primary" name="attach">Прикачи</button>
+
         </form>
+
+        {{ Header }}
+
     </div>
 
 {% endblock %}

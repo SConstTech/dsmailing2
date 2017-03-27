@@ -179,15 +179,19 @@ p.small {
 			<div class="box-header">
 				<h2>Вписване</h2>
 			</div>
+            <form method="post">
+            {% csrf_token %}
 			<label for="username">Потребителско име</label>
 			<br/>
-			<input type="text" id="username">
+			<input type="text" id="username" name="username">
 			<br/>
 			<label for="password">Парола</label>
 			<br/>
-			<input type="password" id="password">
+			<input type="password" id="password" name="password">
 			<br/>
 			<button type="submit">Вход</button>
+            </form>
+
 			<br/>
 		</div>
 	</div>

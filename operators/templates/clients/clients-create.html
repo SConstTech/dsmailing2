@@ -1,0 +1,18 @@
+{% extends "index_operator.html" %}
+{% load static %}
+{% block content %}
+    <div class="container start panel">
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <label for="clientname">Име на клиент</label>
+            <input type="text" id="clientname" name="clientname" class="form-control"/>
+            <br/>
+            <button class="btn btn-primary" name="create">Създай</button>
+
+        </form>
+
+        {{ Header }}
+
+    </div>
+
+{% endblock %}

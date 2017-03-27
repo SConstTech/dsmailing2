@@ -30,6 +30,7 @@ class IndexPageView(RedirectView):
 
 def custom_login(request):
     #{'template_name': 'login.html', 'redirect_field_name': 'system'}
+    # method=post
     if request.user.is_authenticated():
         return HttpResponseRedirect('system:index')
     else:
