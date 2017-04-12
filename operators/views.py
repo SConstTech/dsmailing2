@@ -140,6 +140,15 @@ class ClientCreate(LoginRequiredMixin, GroupRequiredMixin, TemplateView ):
         else:
             return render(request, 'clients/error.html')
 
+class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = u'paper_operator'
+    template_name = 'clients/clients-create.html'
+
+    def post(self):
+        # TODO: find posted barcode in the base and mark it as undelivered with the posted reason
+        # return Status OK (200), JSON {Letter information}
+
+
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
     template_name = 'clients/project-create.html'
