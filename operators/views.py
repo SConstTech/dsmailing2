@@ -100,7 +100,7 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
 
 class HomeView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = 'paper_operator'
-    template_name='index_operator.html'
+    template_name='home_operator.html'
 
 class PreviewView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     group_required = 'paper_operator'
@@ -147,6 +147,7 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     def post(self):
         # TODO: find posted barcode in the base and mark it as undelivered with the posted reason
         # return Status OK (200), JSON {Letter information}
+        pass
 
 
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
