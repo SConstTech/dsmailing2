@@ -1,0 +1,47 @@
+{% extends "index_operator.html" %}
+{% load static %}
+{% block content %}
+    <div class="container start panel" id="app">
+    <h1>Отбелязване на причини за недоставяне</h1>
+            <label for="clientname">Причина за недоставяне</label>
+            <select class="form-control">
+                <option>first</option>
+                <option>second</option>
+                <option>3</option>
+                <option>4</option>
+            </select>
+        {% csrf_token %}
+            <input type="text" id="barcode" name="barcode" class="form-control" autofocus/>
+            <br/>
+            <button class="btn btn-primary" id='submit' name="submit">Отбележи</button>
+        {{ Header }}
+
+{% csrf_token %}
+
+    </div>
+
+<script src="{% static "build/js/js-cookie.js"%}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+<script>
+$(document).ready(function(){
+    var barcode_value = $('#barcode').val();
+    var csrf_token = Cookies('csrftoken');
+
+    $("#submit").click(function(){
+
+        $.post("/operator/barcode-checker",
+            {
+                csrfmiddlewaretoken: csrf_token,
+                barcode:  barcode
+            }
+            ,
+            function(data, status){
+                console.log(data);
+                alert("Data: " + data + "\nStatus: " + status);
+            });
+    });
+});
+</script>
+
+{% endblock %}

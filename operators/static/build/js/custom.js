@@ -339,9 +339,9 @@ if (typeof NProgress != 'undefined') {
 	function init_flot_chart(){
 		
 		if( typeof ($.plot) === 'undefined'){ return; }
-		
+
 		console.log('init_flot_chart');
-		
+
 		
 		
 		var arr_data1 = [

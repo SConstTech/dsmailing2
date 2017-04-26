@@ -4,13 +4,11 @@
     <div class="container start panel">
         <form enctype="multipart/form-data" method="post">
             {% csrf_token %}
-              <select class="form-control" name="project">
+              <select class="form-control" name="client">
                 {% for eachClient in objects_list %}
-                  {% for eachProject in eachClient.projects %}
-                    <option>{{ eachProject.name }}</option>
-                  {% endfor %}
+                    <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
                 {% empty %}
-                    <option>No projects</option>
+                    <option>No clients</option>
                 {% endfor %}
 
 

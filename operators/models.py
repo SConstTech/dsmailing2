@@ -23,7 +23,6 @@ class Letters_values(DynamicEmbeddedDocument):
 class Letters(DynamicDocument):
     '''
     Delivered - доставено
-
     '''
     value = ListField(EmbeddedDocumentField(Letters_values))
     status = StringField(default=_('Delivered'))

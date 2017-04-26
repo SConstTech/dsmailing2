@@ -15,17 +15,13 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     context_object_name = 'objects_list'
     queryset = Clients.objects
 
-    # def get(self, request):
-    #     # return HttpResponse(_('Delivered'))
-    #     print (Clients.objects)
-    #     return render(request, template_name='import/import-file.html')
     def post(self,request):
-        project = request.POST.get('project', False)
-        if project:
+        client = request.POST.get('client', False)
+        if client:
             uploaded_file = request.FILES['filename'].read()
             filename = request.FILES['filename'].name
             if filename:
-                status = self.file_handler(uploaded_file, filename)
+                status = self.file_handler(uploaded_file, filename, client)
                 if status:
                     return render(request, 'import/success.html')
                 else:
@@ -71,23 +67,33 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
             return False
         return mainlist
 
-    def file_handler(self, uploaded_file, filename):
-        infilename = uploaded_file
-        mainlist = []
-        totalrecords = 0
-        print('loading ...')
-
+    def file_handler(self, uploaded_file, filename, client):
         mainlist  = self.xls_reader(uploaded_file=uploaded_file, filename=filename)
+        current_client = Clients.objects.get(id=client)
+        print (current_client)
         if mainlist:
             for eachRecord in mainlist:
+                to_save = True
                 letter = Letters(status='Delivered', print_date=datetime.datetime.now())
                 value = []
                 for eachValue in eachRecord:
                     #         print (eachValue)
                     letters_valuesObject = Letters_values(name=eachValue['name'], value=eachValue['value'])
+                    if eachValue['name'] == 'barcode' or eachValue['name'] == 'баркод':
+                        try:
+                            x = Letters.objects.get(value__value = eachValue['value'])
+                            if len(x):
+                                to_save = False
+                        except DoesNotExist:
+                            pass
+                        # raise
                     value.append(letters_valuesObject)
                 letter.value = value
-                letter.save()
+                letter.client = current_client.to_dbref()
+                if to_save:
+                    letter.save()
+                else:
+                    pass
             return True
 
     def get_context_data(self, **kwargs):
@@ -142,7 +148,7 @@ class ClientCreate(LoginRequiredMixin, GroupRequiredMixin, TemplateView ):
 
 class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
-    template_name = 'clients/clients-create.html'
+    template_name = 'letters/barcode-checker.html'
 
     def post(self):
         # TODO: find posted barcode in the base and mark it as undelivered with the posted reason
