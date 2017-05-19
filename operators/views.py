@@ -6,8 +6,8 @@ from django.http import *
 from braces.views import *
 from system.models import *
 import xlrd, datetime, _thread
-
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import HttpResponse
 
 class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
@@ -150,10 +150,12 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
     template_name = 'letters/barcode-checker.html'
 
-    def post(self):
+    def post(self, request):
         # TODO: find posted barcode in the base and mark it as undelivered with the posted reason
         # return Status OK (200), JSON {Letter information}
-        pass
+        x = request.POST.get('barcode', False)
+        print (request.POST)
+        return HttpResponse ('OK', status=200)
 
 
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):

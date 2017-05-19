@@ -5,41 +5,60 @@
     <h1>Отбелязване на причини за недоставяне</h1>
             <label for="clientname">Причина за недоставяне</label>
             <select class="form-control">
-                <option>first</option>
-                <option>second</option>
-                <option>3</option>
-                <option>4</option>
+                <option>Получателят отказва да получи пратката</option>
+                <option>Пратката не е потърсена от получателя</option>
+                <option>Получателят отсъства</option>
+                <option>Получателят се е преместил на друг адрес</option>
+                <option>Адресът вече не съществува</option>
+                <option>Получателят непознат на посочения адрес</option>
+                <option>Починал</option>
+                <option>Непълен адрес на получателя</option>
             </select>
         {% csrf_token %}
             <input type="text" id="barcode" name="barcode" class="form-control" autofocus/>
             <br/>
-            <button class="btn btn-primary" id='submit' name="submit">Отбележи</button>
-        {{ Header }}
-
-{% csrf_token %}
-
+            <button class="btn btn-primary" id='submit' name="submit" type='submit'>Отбележи</button>
     </div>
-
+<p id='added'></p>
 <script src="{% static "build/js/js-cookie.js"%}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
 <script>
+
 $(document).ready(function(){
-    var barcode_value = $('#barcode').val();
-    var csrf_token = Cookies('csrftoken');
-
-    $("#submit").click(function(){
-
-        $.post("/operator/barcode-checker",
-            {
-                csrfmiddlewaretoken: csrf_token,
-                barcode:  barcode
+$.fn.enterKey = function (fnc) {
+    return this.each(function () {
+        $(this).keypress(function (ev) {
+            var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+            if (keycode == '13') {
+                fnc.call(this, ev);
             }
-            ,
-            function(data, status){
-                console.log(data);
-                alert("Data: " + data + "\nStatus: " + status);
-            });
+        })
+    })
+}
+    var added_list = [];
+    $("#barcode").enterKey(function(e){
+        var barcode_value = $('#barcode').val();
+        console.log(barcode_value);
+        if (barcode_value != ''){
+            $.post("/operator/barcode-checker",
+                {
+                    csrfmiddlewaretoken: Cookies('csrftoken'),
+                    barcode:  barcode_value
+                },
+                function(data, status){
+                    if (status == 'success'){
+                        added_list.push($('#barcode').val());
+                        $('#barcode').val('');
+                        $('#barcode').focus();
+                        $('#added').html(added_list.toString())
+                    }
+                });
+        }
+        else{
+            $('#barcode').val('');
+            $('#barcode').focus();
+        }
     });
 });
 </script>
