@@ -17,44 +17,46 @@ class Letters_values(DynamicEmbeddedDocument):
     name = StringField()
     value = StringField()
 
+class Delivery(DynamicEmbeddedDocument):
+    '''
+    status:
+        not-verified - неясно
+        Delivered - доставено
+        Undelivered - недоставено
+    reason:
+        Получателят отказва да получи пратката
+        Пратката не е потърсена от получателя
+        Получателят отсъства
+        Получателят се е преместил на друг адрес
+        Адресът вече не съществува
+        Получателят непознат на посочения адрес
+        Починал
+        Непълен адрес на получателя
+
+    '''
+
+    status = StringField(default=_('Delivered'))
+    reason = StringField()
 
 class Letters(DynamicDocument):
     '''
-    Delivered - доставено
+    operatorMarked - operatorID marked it as not delivered
 
     '''
     value = ListField(EmbeddedDocumentField(Letters_values))
-    status = StringField(default=_('Delivered'))
+    status = ListField(EmbeddedDocumentField(Delivery))
     print_date = DateTimeField()
     status_date = DateTimeField()
     client = ReferenceField(Clients)
+    operatorMarked = IntField()
+
+    # TODO: Fix the scoping
+    # def find_letter(self, name, value):
+    #     return self.value.get(value = value, name=name)
 
 
-# # example ORM
-# class Tasks(DynamicDocument):
-#     title = StringField(max_length=200, required=True)
-#     isDone = BooleanField(default=False)
-#
-# class Project(EmbeddedDocument):
-#     name = StringField(max_length=250, required=True)
-#
-#
-# class Client(DynamicDocument):
-#     name = StringField(required=True)
-#     bulstat = StringField(required=True)
-#     projects = EmbeddedDocumentListField('Project')
-#
-# class Criteria(EmbeddedDocument):
-#     type = StringField()
-#     value = StringField()
-#
-# class UndeliveryCause(Document):
-#     type = StringField()
-#     num_type = IntField()
-#
-# class Letters(Document):
-#     project_id = EmbeddedDocumentField('Project')
-#     letter_data = EmbeddedDocumentListField('Criteria')
-#     undelivery = EmbeddedDocumentListField('UndeliveryCause')
-
+class basesImported(DynamicDocument):
+    dateImported = DateTimeField()
+    client = StringField()
+    filename = StringField()
 

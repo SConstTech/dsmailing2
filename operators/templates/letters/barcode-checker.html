@@ -2,9 +2,9 @@
 {% load static %}
 {% block content %}
     <div class="container start panel" id="app">
-    <h1>Отбелязване на причини за недоставяне</h1>
-            <label for="clientname">Причина за недоставяне</label>
-            <select class="form-control">
+    <h1 align='center'>Отбелязване на причини за недоставяне</h1>
+            <h2 align='center'>Причина за недоставяне</h2>
+            <select class="form-control" id='reason'>
                 <option>Получателят отказва да получи пратката</option>
                 <option>Пратката не е потърсена от получателя</option>
                 <option>Получателят отсъства</option>
@@ -17,41 +17,54 @@
         {% csrf_token %}
             <input type="text" id="barcode" name="barcode" class="form-control" autofocus/>
             <br/>
-            <button class="btn btn-primary" id='submit' name="submit" type='submit'>Отбележи</button>
     </div>
-<p id='added'></p>
+<div class='container start panel' id='added_list'></div>
+<form method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="barcodes" id="barcodes">
+    <button class='btn btn-warning btn-block' type="submit" name="finish" id="finish" value='export' disabled> Експортиране </button>
+</form>
+
+
 <script src="{% static "build/js/js-cookie.js"%}"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
 <script>
 
 $(document).ready(function(){
-$.fn.enterKey = function (fnc) {
-    return this.each(function () {
-        $(this).keypress(function (ev) {
-            var keycode = (ev.keyCode ? ev.keyCode : ev.which);
-            if (keycode == '13') {
-                fnc.call(this, ev);
-            }
+    $.fn.enterKey = function (fnc) {
+        return this.each(function () {
+            $(this).keypress(function (ev) {
+                var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+                if (keycode == '13') {
+                    fnc.call(this, ev);
+                }
+            })
         })
-    })
-}
+    }
     var added_list = [];
     $("#barcode").enterKey(function(e){
         var barcode_value = $('#barcode').val();
-        console.log(barcode_value);
+        var reason_value = $('#reason').val();
         if (barcode_value != ''){
             $.post("/operator/barcode-checker",
                 {
                     csrfmiddlewaretoken: Cookies('csrftoken'),
-                    barcode:  barcode_value
+                    barcode:  barcode_value,
+                    reason: reason_value
                 },
                 function(data, status){
                     if (status == 'success'){
                         added_list.push($('#barcode').val());
                         $('#barcode').val('');
                         $('#barcode').focus();
-                        $('#added').html(added_list.toString())
+                        $('#barcodes').val(added_list);
+                        $('#added_list').html(added_list.toString());
+                        $('#finish').attr('disabled', false);
+                        $('#finish').attr('class', 'btn btn-success btn-block');
+                    }
+                    else{
+                        alert('Записа не е записан успешно - липсва запис в базата или не е прочетен правилно!');
                     }
                 });
         }
@@ -60,7 +73,26 @@ $.fn.enterKey = function (fnc) {
             $('#barcode').focus();
         }
     });
+
+    $('#finish').on('click', function(){
+        var disabled_finish = $('#finish').attr('disabled');
+        var barcode_list = $('#added').text();
+        if (added_list.length > 0){
+            $.post("/operator/barcode-checker",
+                {
+                    csrfmiddlewaretoken: Cookies('csrftoken'),
+                    barcodes:  barcode_list,
+                    finish: 'yes'
+                },
+                function(data, status){
+                    console.log(data);
+
+                });
+        }
+    });
 });
+
+
 </script>
 
 {% endblock %}

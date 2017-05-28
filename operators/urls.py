@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'preview$', PreviewView.as_view(), name='preview'),
     url(r'create-client$', ClientCreate.as_view(), name='create-client'),
     url(r'barcode-checker$', BarcodeChecker.as_view(), name='barcode-checker'),
+    url(r'export-by-date$', ExportReport.as_view(), name='export-by-date'),
     url(r'create-project$', ProjectCreate.as_view(), name='create-project'),
     url(r'^$', HomeView.as_view(), name='home'),
 

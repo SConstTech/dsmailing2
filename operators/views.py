@@ -5,7 +5,7 @@ from django.shortcuts import *
 from django.http import *
 from braces.views import *
 from system.models import *
-import xlrd, datetime, _thread
+import xlrd, datetime, _thread, csv
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 
@@ -23,6 +23,7 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
             if filename:
                 status = self.file_handler(uploaded_file, filename, client)
                 if status:
+                    baseImportObject = basesImported(dateImported=datetime.datetime.now(), client=client, filename=filename)
                     return render(request, 'import/success.html')
                 else:
                     return render(request, 'import/error.html', context={'msg': 'Проблем при зареждането на файла'})
@@ -74,10 +75,10 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
         if mainlist:
             for eachRecord in mainlist:
                 to_save = True
-                letter = Letters(status='Delivered', print_date=datetime.datetime.now())
+                letter = Letters(print_date=datetime.datetime.now())
                 value = []
                 for eachValue in eachRecord:
-                    #         print (eachValue)
+
                     letters_valuesObject = Letters_values(name=eachValue['name'], value=eachValue['value'])
                     if eachValue['name'] == 'barcode' or eachValue['name'] == 'баркод':
                         try:
@@ -153,10 +154,45 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     def post(self, request):
         # TODO: find posted barcode in the base and mark it as undelivered with the posted reason
         # return Status OK (200), JSON {Letter information}
-        x = request.POST.get('barcode', False)
-        print (request.POST)
-        return HttpResponse ('OK', status=200)
+        finish_button = request.POST.get('finish', False)
+        if finish_button:
+            barcode_list = request.POST.get('barcodes', False)
+            if barcode_list:
+                response = HttpResponse(content_type='text/csv')
+                response['Content-Disposition'] = 'attachment; filename="export-report.csv"'
+                writer = csv.writer(response, delimiter='\t')
 
+                barcode_list = [x for x in barcode_list.split(',')]
+                letterData = Letters.objects.filter(value__name__in =['barcode','баркод'], value__value__in = barcode_list)
+                if len(letterData):
+                    for letterObj in letterData:
+                        row = []
+                        for letterValue in letterObj.value:
+                            row.extend([letterValue['value']])
+                        row.extend([letterObj.status[-1].status,letterObj.status[-1].reason])
+                        writer.writerow(row)
+                return response
+
+            else:
+                return HttpResponse('bad input', status=404)
+
+        else:
+            barcode = request.POST.get('barcode', False)
+            cause = request.POST.get('reason', False)
+            lettersObject = Letters.objects.filter(value__name__in=['barcode', 'баркод'], value__value=barcode)
+                # lettersObject = Letters.objects.get(value__name='баркод', value__value=barcode)
+            if lettersObject:
+                lettersObject = lettersObject[0]
+                deliverObject = Delivery(status = 'Undelivered', reason = cause)
+                lettersObject.status = [deliverObject]
+                lettersObject.operatorMarked = request.user.id
+                lettersObject.status_date = datetime.datetime.now()
+                lettersObject.save()
+
+                return HttpResponse ('OK', status=200)
+            else:
+                return HttpResponse('bad input', status=201)
+        
 
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
@@ -176,3 +212,8 @@ class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
             return render(request, 'clients/success.html')
         else:
             return render(request, 'clients/error.html')
+
+class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = u'paper_operator'
+    template_name = 'queries/export_by_date.html'
+
