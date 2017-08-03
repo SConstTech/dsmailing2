@@ -1,3 +1,5 @@
+﻿#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 from mongoengine import *
 connect('dsmailing-db')
 from django.utils.translation import ugettext as _

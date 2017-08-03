@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # import datetime
 # from mongoengine import *
 # from django.utils.translation import ugettext as _

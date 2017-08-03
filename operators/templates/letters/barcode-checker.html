@@ -1,6 +1,7 @@
 {% extends "index_operator.html" %}
 {% load static %}
 {% block content %}
+    <div class="col-md-6 col-md-offset-3">
     <div class="container start panel" id="app">
     <h1 align='center'>Отбелязване на причини за недоставяне</h1>
             <h2 align='center'>Причина за недоставяне</h2>
@@ -18,11 +19,14 @@
             <input type="text" id="barcode" name="barcode" class="form-control" autofocus/>
             <br/>
     </div>
+        </div>
 <div class='container start panel' id='added_list'></div>
 <form method="POST">
     {% csrf_token %}
     <input type="hidden" name="barcodes" id="barcodes">
+    <div class="" style="width: 30em">
     <button class='btn btn-warning btn-block' type="submit" name="finish" id="finish" value='export' disabled> Експортиране </button>
+        </div>
 </form>
 
 

@@ -1,3 +1,5 @@
+
+# -*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 from django.views.generic.base import *
 from django.views.generic.list import *
@@ -5,7 +7,7 @@ from django.shortcuts import *
 from django.http import *
 from braces.views import *
 from system.models import *
-import xlrd, datetime, _thread, csv
+import xlrd, datetime, csv
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 
