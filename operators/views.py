@@ -1,13 +1,14 @@
-from django.core.urlresolvers import reverse
 from django.views.generic.base import *
 from django.views.generic.list import *
 from django.shortcuts import *
 from django.http import *
 from braces.views import *
 from system.models import *
-import xlrd, datetime, _thread, csv
+import xlrd, datetime, csv
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
+from rest_framework.response import Response
+import jsonify
 
 class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
@@ -193,7 +194,6 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
             else:
                 return HttpResponse('bad input', status=201)
         
-
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
     template_name = 'clients/project-create.html'
@@ -216,4 +216,13 @@ class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
 class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
     template_name = 'queries/export_by_date.html'
+
+
+class GetClients(LoginRequiredMixin, GroupRequiredMixin, ListView):
+    group_required = u'paper_operator'
+
+    def post(self, request):
+        test = {'test_key': 'test_value'}
+        return JsonResponse(status=200, data=test)
+
 

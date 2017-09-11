@@ -28,13 +28,13 @@ class IndexPageView(RedirectView):
                 return reverse('system:home')
 
 
-def custom_login(request):
-    #{'template_name': 'login.html', 'redirect_field_name': 'system'}
-    # method=post
-    if request.user.is_authenticated():
-        return HttpResponseRedirect('system:index')
-    else:
-        return auth_views.login(request, template_name='login.html')
+# def custom_login(request):
+#     #{'template_name': 'login.html', 'redirect_field_name': 'system'}
+#     # method=post
+#     if request.user.is_authenticated():
+#         return HttpResponseRedirect('system:index')
+#     else:
+#         return auth_views.login(request, template_name='login.html')
 
 def custom_logout(request):
     logout(request)

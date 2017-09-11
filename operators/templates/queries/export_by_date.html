@@ -3,11 +3,31 @@
 {% block content %}
 
 
-<h1 align='center'>Изберете дата за експортиране</h1>
+<h1 align='center'>Изберете период за експортиране</h1>
     <div class="container-fluid">
-        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-            <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-            <span>July 11, 2017 - August 9, 2017</span> <b class="caret"></b>
+        <div class="form-group">
+            <label for="clientName"> Избери клиент:</label>
+            <select name="client" id="clientName" class="form-control">
+
+            </select>
+            <hr>
+            <label for="period"> Избери период:</label>
+            <div class="row" name="period" id="period">
+                <div class="col-md-2"></div>
+                <button class="btn btn-primary col-md-2">Вчера</button>
+                <button class="btn btn-primary col-md-2">Днес</button>
+                <button class="btn btn-primary col-md-2">Последните 7 дни</button>
+                <button class="btn btn-primary col-md-2">Последните 30 дни</button>
+            </div>
         </div>
     </div>
+
+{% csrf_token %}
+<script>
+$(function(){
+    console.log(x);
+
+});
+</script>
+
 {% endblock %}
