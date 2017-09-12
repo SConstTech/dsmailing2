@@ -18,7 +18,11 @@
             <input type="text" id="barcode" name="barcode" class="form-control" autofocus/>
             <br/>
     </div>
-<div class='container start panel' id='added_list'></div>
+<div class='container start panel'>
+<ul id='added_list'>
+
+</ul>
+</div>
 <form method="POST">
     {% csrf_token %}
     <input type="hidden" name="barcodes" id="barcodes">
@@ -54,17 +58,25 @@ $(document).ready(function(){
                     reason: reason_value
                 },
                 function(data, status){
-                    if (status == 'success'){
+                    if (status === 'success'){
+
                         added_list.push($('#barcode').val());
+
                         $('#barcode').val('');
                         $('#barcode').focus();
                         $('#barcodes').val(added_list);
-                        $('#added_list').html(added_list.toString());
+                        $('ul').empty();
+                        for (var i=added_list.length-5; i< added_list.length; i++){
+                                $('#added_list').append("<button class='btn remove'>" + added_list[i] + "</button>");
+                        }
                         $('#finish').attr('disabled', false);
                         $('#finish').attr('class', 'btn btn-success btn-block');
                     }
                     else{
-                        alert('Записа не е записан успешно - липсва запис в базата или не е прочетен правилно!');
+                        alert('Записа не е записан успешно - липсва запис в базата или не е прочетен правилно от четеца!');
+                        $('#barcode').val('');
+                        $('#barcode').focus();
+
                     }
                 });
         }

@@ -5,10 +5,8 @@ from django.http import *
 from braces.views import *
 from system.models import *
 import xlrd, datetime, csv
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from datetime import timedelta
 from django.http import HttpResponse
-from rest_framework.response import Response
-import jsonify
 
 class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
@@ -192,7 +190,7 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
                 return HttpResponse ('OK', status=200)
             else:
-                return HttpResponse('bad input', status=201)
+                return HttpResponse('bad input', status=204)
         
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
@@ -217,12 +215,61 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
     template_name = 'queries/export_by_date.html'
 
-
-class GetClients(LoginRequiredMixin, GroupRequiredMixin, ListView):
-    group_required = u'paper_operator'
+    def get_context_data(self, **kwargs):
+        context = super(ExportReport, self).get_context_data(**kwargs)
+        context['allClients'] = Clients.objects()
+        return context
 
     def post(self, request):
-        test = {'test_key': 'test_value'}
-        return JsonResponse(status=200, data=test)
+        print ('Hey world of POST!')
+        clientID = request.POST.get('client', False)
+        clientObject = Clients.objects.get(id=clientID)
+        days = int(request.POST.get('days', False))
+        substract_date = datetime.datetime.now() - timedelta(days=days)
+        lettersData = Letters.objects.filter(client=clientID, status_date__gte=substract_date)
 
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="%s-report-today.csv"' %clientObject.name
+        writer = csv.writer(response, delimiter='\t')
+
+        for letterObj in lettersData:
+            row = []
+            for letterValue in letterObj.value:
+                row.extend([letterValue['value']])
+            row.extend([letterObj.status[-1].status, letterObj.status[-1].reason])
+            writer.writerow(row)
+
+
+        return response
+
+
+class SearchLetters(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = u'paper_operator'
+    template_name = 'queries/search-letters.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(SearchLetters, self).get_context_data(**kwargs)
+        context['allClients'] = Clients.objects()
+        return context
+
+    def post(self, request):
+        searched_value = request.POST.get('searched_value', False)
+        clientID = request.POST.get('client', False)
+        lettersData = Letters.objects.filter(client=clientID, value__value__icontains=str(searched_value))
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="searched-report.csv"'
+        writer = csv.writer(response, delimiter='\t')
+
+        for letterObj in lettersData:
+            row = []
+            for letterValue in letterObj.value:
+                row.extend([letterValue['value']])
+            try:
+                row.extend([letterObj.status[-1].status, letterObj.status[-1].reason])
+            except:
+                row.extend(['Не е обработено', 'Не е обработено'])
+            writer.writerow(row)
+
+
+        return response
 

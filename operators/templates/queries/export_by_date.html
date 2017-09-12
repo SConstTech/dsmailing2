@@ -3,31 +3,34 @@
 {% block content %}
 
 
-<h1 align='center'>Изберете период за експортиране</h1>
+    <h1 align='center'>Изберете период за експортиране</h1>
+    <div class="alert alert-info">
+      <strong>Info!</strong> Резултата от експортирането ще бъде csv файл.
+    </div>
+
     <div class="container-fluid">
-        <div class="form-group">
+        <form method="post" class="form-group">
+        {% csrf_token %}
             <label for="clientName"> Избери клиент:</label>
             <select name="client" id="clientName" class="form-control">
-
+                {% for eachClient in allClients %}
+                    <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
+                {% endfor %}
             </select>
             <hr>
             <label for="period"> Избери период:</label>
             <div class="row" name="period" id="period">
                 <div class="col-md-2"></div>
-                <button class="btn btn-primary col-md-2">Вчера</button>
-                <button class="btn btn-primary col-md-2">Днес</button>
-                <button class="btn btn-primary col-md-2">Последните 7 дни</button>
-                <button class="btn btn-primary col-md-2">Последните 30 дни</button>
+                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="2">Вчера</button>
+                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="1">Днес</button>
+                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="8">Последните 7 дни</button>
+                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="31">Последните 30 дни</button>
             </div>
-        </div>
+        </form>
     </div>
 
-{% csrf_token %}
 <script>
-$(function(){
-    console.log(x);
 
-});
 </script>
 
 {% endblock %}

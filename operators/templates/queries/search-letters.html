@@ -1,0 +1,32 @@
+{% extends "index_operator.html" %}
+{% load static %}
+{% block content %}
+
+
+<h1 align='center'>Търсене на писмо</h1>
+<div class="alert alert-info">
+  <strong>Info!</strong> Резултата от търсенето ще бъде csv файл.
+</div>
+
+    <div class="container-fluid">
+        <form method="post" class="form-group">
+        {% csrf_token %}
+            <label for="clientName"> Избери клиент:</label>
+            <select name="client" id="clientName" class="form-control">
+                {% for eachClient in allClients %}
+                    <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
+                {% endfor %}
+            </select>
+            <hr>
+            <label for="period"> Въведи индекс за търсене:</label>
+            <input type="text" class='form-control' name="searched_value"/>
+            <hr>
+            <button type="submit" class="btn btn-primary btn-block"> Търси </button>
+        </form>
+    </div>
+
+<script>
+
+</script>
+
+{% endblock %}

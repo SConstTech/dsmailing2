@@ -16,10 +16,9 @@
               <div class="menu_section">
                 <h3>General</h3>
                 <ul class="nav side-menu">
-                  <li><a><i class="fa fa-home"></i> Основни менюта<span class="fa fa-chevron-down"></span></a>
+                  <li><a><i class="fa fa-home"></i> ОПЕРАЦИИ<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
                       <li><a href="{% url 'operators:barcode-checker' %}">Отбелязване на недоставени</a></li>
-                      <li><a href="{% url 'operators:export-by-date' %}">Експортиране на недоставени по избран ден</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-desktop"></i> Статистика <span class="fa fa-chevron-down"></span></a>
@@ -27,10 +26,10 @@
                       <li><a href="#">#TODO</a></li>
                     </ul>
                   </li>
-                  <li><a><i class="fa fa-table"></i> Справки <span class="fa fa-chevron-down"></span></a>
+                  <li><a><i class="fa fa-table"></i> Справки и експортиране<span class="fa fa-chevron-down"></span></a>
                     <ul class="nav child_menu">
-                      <li><a href="#">#TODO</a></li>
-                      <li><a href="#">#TODO</a></li>
+                      <li><a href="{% url 'operators:export-by-date' %}">Експортиране на недоставени</a></li>
+                      <li><a href="{% url 'operators:search-by-info' %}">Търсене на писмо</a></li>
                     </ul>
                   </li>
                   <li><a><i class="fa fa-edit"></i> Служебни менюта <span class="fa fa-chevron-down"></span></a>
