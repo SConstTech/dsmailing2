@@ -4,9 +4,6 @@
 
 
     <h1 align='center'>Импортиране на нова база</h1>
-    <div class="alert alert-info">
-      <strong>Info!</strong> Очаквания файл за импортиране е XLS, задължително с един ред header в който да има barcode.
-    </div>
 
     <div class="container start panel">
         <form enctype="multipart/form-data" method="post">
@@ -15,8 +12,10 @@
                 {% for eachClient in objects_list %}
                     <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
                 {% empty %}
-                    <option>Няма създадени клиенти!</option>
+                    <option>No clients</option>
                 {% endfor %}
+
+
               </select>
             <br/>
             <input type="file" name="filename" class="form-control"/>
