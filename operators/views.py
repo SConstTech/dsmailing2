@@ -100,10 +100,6 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
         context = super(FileImport, self).get_context_data(**kwargs)
         return context
 
-    def thread_import(self, name, value):
-        # TODO - Do the thread/Queue import of bases
-        pass
-
 class HomeView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = 'paper_operator'
     template_name='home_operator.html'
