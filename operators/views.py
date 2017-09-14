@@ -275,3 +275,23 @@ class SearchLetters(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
         return response
 
+
+class ClientStatistics(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = u'paper_operator'
+    template_name = 'queries/client-statistics.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(ClientStatistics, self).get_context_data(**kwargs)
+        allClients = Clients.objects()
+        frontData = []
+        for eachClient in allClients:
+            counter_undelivered = Letters.objects.filter(client=eachClient.id, operatorMarked__exists=True).count()
+            counter_delivered = Letters.objects.filter(client=eachClient.id, operatorMarked__exists=False).count()
+            counter_total = Letters.objects.filter(client=eachClient.id).count()
+            frontData.append({'clientName': eachClient.name,
+                              'counter_undelivered':counter_undelivered,
+                              'counter_total':counter_total,
+                              'counter_delivered': counter_delivered})
+        context['frontData'] = frontData
+        return context
+

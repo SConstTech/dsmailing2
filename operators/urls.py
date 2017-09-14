@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'export-by-date$', ExportReport.as_view(), name='export-by-date'),
     url(r'create-project$', ProjectCreate.as_view(), name='create-project'),
     url(r'search-by-info', SearchLetters.as_view(), name='search-by-info'),
+    url(r'client-statistics', ClientStatistics.as_view(), name='client-statistics'),
     url(r'^$', HomeView.as_view(), name='home'),
 
 ]

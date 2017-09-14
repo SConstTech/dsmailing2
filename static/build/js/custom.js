@@ -2506,7 +2506,7 @@ if (typeof NProgress != 'undefined') {
 
 			function init_DataTables() {
 
-				// console.log('run_datatables');
+				console.log('run_datatables');
 
 				if( typeof ($.fn.DataTable) === 'undefined'){ return; }
 				// console.log('init_DataTables');
