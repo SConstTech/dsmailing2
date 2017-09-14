@@ -181,7 +181,7 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
                 deliverObject = Delivery(status = 'Undelivered', reason = cause)
                 lettersObject.status = [deliverObject]
                 lettersObject.operatorMarked = request.user.id
-                lettersObject.status_date = datetime.datetime.now()
+                lettersObject.status_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0)
                 lettersObject.save()
 
                 return HttpResponse ('OK', status=200)
@@ -221,7 +221,7 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         clientID = request.POST.get('client', False)
         clientObject = Clients.objects.get(id=clientID)
         days = int(request.POST.get('days', False))
-        substract_date = datetime.datetime.now() - timedelta(days=days)
+        substract_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0)
         lettersData = Letters.objects.filter(client=clientID, status_date__gte=substract_date)
 
         response = HttpResponse(content_type='text/csv')
