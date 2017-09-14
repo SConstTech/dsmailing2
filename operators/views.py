@@ -18,19 +18,20 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     def post(self,request):
         client = request.POST.get('client', False)
         if client:
-            uploaded_file = request.FILES['filename'].read()
-            filename = request.FILES['filename'].name
-            if filename:
-                status = self.file_handler(uploaded_file, filename, client)
-                if status:
-                    baseImportObject = basesImported(dateImported=datetime.datetime.now(), client=client, filename=filename).save()
-                    return render(request, 'import/success.html')
+            file_list = request.FILES.getlist('filename')
+            for opened_file in file_list:
+            # uploaded_file = request.FILES['filename'].read()
+                uploaded_file = opened_file.read()
+                filename = opened_file.name
+                if filename:
+                    status = self.file_handler(uploaded_file, filename, client)
+                    if status:
+                        baseImportObject = basesImported(dateImported=datetime.datetime.now(), client=client, filename=filename).save()
+                    else:
+                        return render(request, 'import/error.html', context={'msg': 'Проблем при зареждането на файла'})
                 else:
-                    return render(request, 'import/error.html', context={'msg': 'Проблем при зареждането на файла'})
-            else:
-                return render(request, 'import/error.html', context={'msg': 'Некоректен файл'})
-        else:
-            return render(request, 'import/error.html', context={'msg': 'Не е избран коректен проект'})
+                    return render(request, 'import/error.html', context={'msg': 'Некоректен файл'})
+            return render(request, 'import/success.html')
 
     def xls_reader(self, uploaded_file, filename):
         try:
@@ -76,13 +77,13 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
         current_client = Clients.objects.get(id=client)
         if mainlist:
             save_list = []
-            barcode_list = []
-            temp = Letters.objects.all().values_list('value')
-
-            for eachList in temp:
-                for eachItem in eachList:
-                    if eachItem.name == 'баркод' or eachItem.name == 'barcode':
-                        barcode_list.append(eachItem.value)
+            # barcode_list = []
+            # temp = Letters.objects.all().values_list('value')
+            #
+            # for eachList in temp:
+            #     for eachItem in eachList:
+            #         if eachItem.name == 'баркод' or eachItem.name == 'barcode':
+            #             barcode_list.append(eachItem.value)
             print ('Build barcode_list time ---------%s seconds ---------' %(time.time() - start_time))
 
             for eachRecord in mainlist:
@@ -90,15 +91,18 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
                 letter = Letters(print_date=datetime.datetime.now())
                 value = []
                 for eachValue in eachRecord:
-                    if eachValue['name'] == 'barcode' or eachValue['name'] == 'баркод':
-                        if eachValue['value'] in barcode_list:
-                            to_save = False
-                    letters_valuesObject = Letters_values(name=eachValue['name'], value=eachValue['value'])
+                    # if eachValue['name'] == 'barcode' or eachValue['name'] == 'баркод':
+                    #     if eachValue['value'] in barcode_list:
+                    #         to_save = False
+                    letters_valuesObject = Letters_values(**eachValue)
                     value.append(letters_valuesObject)
-                if to_save:
-                    letter.value = value
-                    letter.client = current_client.to_dbref()
-                    save_list.append(letter)
+                # if to_save:
+                letter.value = value
+                letter.client = current_client.to_dbref()
+                save_list.append(letter)
+                # end if to_save
+            print('build values time ---------%s seconds ---------' % (time.time() - start_time))
+
             if save_list:
                 Letters.objects.insert(save_list)
             print ('End-Loading file ---------%s seconds --------- loaded %s records' %(time.time() - start_time, len(save_list)))
@@ -274,7 +278,6 @@ class SearchLetters(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
 
         return response
-
 
 class ClientStatistics(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
