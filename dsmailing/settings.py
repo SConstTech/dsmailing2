@@ -27,7 +27,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_AGE = 20 * 60 #
 
 # Application definition
 
@@ -131,9 +130,9 @@ LOGIN_URL = '/system/login'
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "static/"),
-# )
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static/"),
+)
 

@@ -7,6 +7,7 @@ from system.models import *
 import xlrd, datetime, csv
 from datetime import timedelta
 from django.http import HttpResponse
+import time
 
 class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
@@ -22,7 +23,7 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
             if filename:
                 status = self.file_handler(uploaded_file, filename, client)
                 if status:
-                    baseImportObject = basesImported(dateImported=datetime.datetime.now(), client=client, filename=filename)
+                    baseImportObject = basesImported(dateImported=datetime.datetime.now(), client=client, filename=filename).save()
                     return render(request, 'import/success.html')
                 else:
                     return render(request, 'import/error.html', context={'msg': 'Проблем при зареждането на файла'})
@@ -68,32 +69,39 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
         return mainlist
 
     def file_handler(self, uploaded_file, filename, client):
+        start_time = time.time()
         mainlist  = self.xls_reader(uploaded_file=uploaded_file, filename=filename)
+        print('Loaded XLS file ---------%s seconds ---------' % (time.time() - start_time))
+
         current_client = Clients.objects.get(id=client)
-        print (current_client)
         if mainlist:
+            save_list = []
+            barcode_list = []
+            temp = Letters.objects.all().values_list('value')
+
+            for eachList in temp:
+                for eachItem in eachList:
+                    if eachItem.name == 'баркод' or eachItem.name == 'barcode':
+                        barcode_list.append(eachItem.value)
+            print ('Build barcode_list time ---------%s seconds ---------' %(time.time() - start_time))
+
             for eachRecord in mainlist:
                 to_save = True
                 letter = Letters(print_date=datetime.datetime.now())
                 value = []
                 for eachValue in eachRecord:
-
-                    letters_valuesObject = Letters_values(name=eachValue['name'], value=eachValue['value'])
                     if eachValue['name'] == 'barcode' or eachValue['name'] == 'баркод':
-                        try:
-                            x = Letters.objects.get(value__value = eachValue['value'])
-                            if len(x):
-                                to_save = False
-                        except DoesNotExist:
-                            pass
-                        # raise
+                        if eachValue['value'] in barcode_list:
+                            to_save = False
+                    letters_valuesObject = Letters_values(name=eachValue['name'], value=eachValue['value'])
                     value.append(letters_valuesObject)
-                letter.value = value
-                letter.client = current_client.to_dbref()
                 if to_save:
-                    letter.save()
-                else:
-                    pass
+                    letter.value = value
+                    letter.client = current_client.to_dbref()
+                    save_list.append(letter)
+            if save_list:
+                Letters.objects.insert(save_list)
+            print ('End-Loading file ---------%s seconds --------- loaded %s records' %(time.time() - start_time, len(save_list)))
             return True
 
     def get_context_data(self, **kwargs):
@@ -217,7 +225,6 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         return context
 
     def post(self, request):
-        print ('Hey world of POST!')
         clientID = request.POST.get('client', False)
         clientObject = Clients.objects.get(id=clientID)
         days = int(request.POST.get('days', False))
@@ -237,7 +244,6 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
 
         return response
-
 
 class SearchLetters(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
