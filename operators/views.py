@@ -232,7 +232,7 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         clientID = request.POST.get('client', False)
         clientObject = Clients.objects.get(id=clientID)
         days = int(request.POST.get('days', False))
-        substract_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0)
+        substract_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0) - timedelta(days=days)
         lettersData = Letters.objects.filter(client=clientID, status_date__gte=substract_date)
 
         response = HttpResponse(content_type='text/csv')

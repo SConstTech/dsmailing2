@@ -20,13 +20,11 @@
     </div>
 <div class='container start panel'>
 <ul id='added_list'>
-
 </ul>
 </div>
 <form method="POST">
     {% csrf_token %}
     <input type="hidden" name="barcodes" id="barcodes">
-    <button class='btn btn-warning btn-block' type="submit" name="finish" id="finish" value='export' disabled> Експортиране </button>
 </form>
 
 
@@ -60,17 +58,10 @@ $(document).ready(function(){
                 function(data, status){
                     if (status === 'success'){
 
-                        added_list.push($('#barcode').val());
-
+                        added_list.push();
+                        $('#added_list').html("Последно сканиран: <button class='btn remove'>" + $('#barcode').val() + "</button>");
                         $('#barcode').val('');
                         $('#barcode').focus();
-                        $('#barcodes').val(added_list);
-                        $('ul').empty();
-                        for (var i=added_list.length-5; i< added_list.length; i++){
-                                $('#added_list').append("<button class='btn remove'>" + added_list[i] + "</button>");
-                        }
-                        $('#finish').attr('disabled', false);
-                        $('#finish').attr('class', 'btn btn-success btn-block');
                     }
                     else{
                         alert('Записа не е записан успешно - липсва запис в базата или не е прочетен правилно от четеца!');
@@ -86,22 +77,6 @@ $(document).ready(function(){
         }
     });
 
-    $('#finish').on('click', function(){
-        var disabled_finish = $('#finish').attr('disabled');
-        var barcode_list = $('#added').text();
-        if (added_list.length > 0){
-            $.post("/operator/barcode-checker",
-                {
-                    csrfmiddlewaretoken: Cookies('csrftoken'),
-                    barcodes:  barcode_list,
-                    finish: 'yes'
-                },
-                function(data, status){
-                    console.log(data);
-
-                });
-        }
-    });
 });
 
 
