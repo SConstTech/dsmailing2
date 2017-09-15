@@ -1,3 +1,22 @@
+Skip to content
+This repository
+Search
+Pull requests
+Issues
+Marketplace
+Explore
+ @skonstantinov89
+ Sign out
+ Watch 2
+  Star 0
+ Fork 0 SConstTech/dsmailing2
+ Code  Issues 0  Pull requests 0  Projects 0  Wiki  Settings Insights 
+Tree: 994e053464 Find file Copy pathdsmailing2/operators/templates/letters/barcode-checker.html
+44844b1  3 days ago
+@skonstantinov89 skonstantinov89 Added more logic and trying to push for testing
+1 contributor
+RawBlameHistory    
+110 lines (97 sloc)  4.17 KB
 {% extends "index_operator.html" %}
 {% load static %}
 {% block content %}
@@ -20,11 +39,13 @@
     </div>
 <div class='container start panel'>
 <ul id='added_list'>
+
 </ul>
 </div>
 <form method="POST">
     {% csrf_token %}
     <input type="hidden" name="barcodes" id="barcodes">
+    <button class='btn btn-warning btn-block' type="submit" name="finish" id="finish" value='export' disabled> Експортиране </button>
 </form>
 
 
@@ -32,7 +53,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 
 <script>
-
 $(document).ready(function(){
     $.fn.enterKey = function (fnc) {
         return this.each(function () {
@@ -57,17 +77,21 @@ $(document).ready(function(){
                 },
                 function(data, status){
                     if (status === 'success'){
-
-                        added_list.push();
-                        $('#added_list').html("Последно сканиран: <button class='btn remove'>" + $('#barcode').val() + "</button>");
+                        added_list.push($('#barcode').val());
                         $('#barcode').val('');
                         $('#barcode').focus();
+                        $('#barcodes').val(added_list);
+                        $('ul').empty();
+                        for (var i=added_list.length-5; i< added_list.length; i++){
+                                $('#added_list').append("<button class='btn remove'>" + added_list[i] + "</button>");
+                        }
+                        $('#finish').attr('disabled', false);
+                        $('#finish').attr('class', 'btn btn-success btn-block');
                     }
                     else{
                         alert('Записа не е записан успешно - липсва запис в базата или не е прочетен правилно от четеца!');
                         $('#barcode').val('');
                         $('#barcode').focus();
-
                     }
                 });
         }
@@ -76,10 +100,34 @@ $(document).ready(function(){
             $('#barcode').focus();
         }
     });
-
+    $('#finish').on('click', function(){
+        var disabled_finish = $('#finish').attr('disabled');
+        var barcode_list = $('#added').text();
+        if (added_list.length > 0){
+            $.post("/operator/barcode-checker",
+                {
+                    csrfmiddlewaretoken: Cookies('csrftoken'),
+                    barcodes:  barcode_list,
+                    finish: 'yes'
+                },
+                function(data, status){
+                    console.log(data);
+                });
+        }
+    });
 });
-
-
 </script>
 
 {% endblock %}
+© 2017 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+API
+Training
+Shop
+Blog
+About
