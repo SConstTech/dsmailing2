@@ -11,7 +11,7 @@ class Command(BaseCommand):
         start_time = time.time()
         print('Started  ---------{:.0f} seconds ---------'.format(time.time()- start_time))
 
-        LettersData = Letters.objects.filter(client='59ba80136dc7720d28bfc297')
+        LettersData = Letters.objects.all()
         for index, eachLetter in enumerate(LettersData):
             if not index%20000:
                 print ("Processed %s records ..." %index)
