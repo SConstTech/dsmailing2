@@ -1,22 +1,3 @@
-Skip to content
-This repository
-Search
-Pull requests
-Issues
-Marketplace
-Explore
- @skonstantinov89
- Sign out
- Watch 2
-  Star 0
- Fork 0 SConstTech/dsmailing2
- Code  Issues 0  Pull requests 0  Projects 0  Wiki  Settings Insights 
-Tree: 994e053464 Find file Copy pathdsmailing2/operators/templates/letters/barcode-checker.html
-44844b1  3 days ago
-@skonstantinov89 skonstantinov89 Added more logic and trying to push for testing
-1 contributor
-RawBlameHistory    
-110 lines (97 sloc)  4.17 KB
 {% extends "index_operator.html" %}
 {% load static %}
 {% block content %}
@@ -42,11 +23,6 @@ RawBlameHistory
 
 </ul>
 </div>
-<form method="POST">
-    {% csrf_token %}
-    <input type="hidden" name="barcodes" id="barcodes">
-    <button class='btn btn-warning btn-block' type="submit" name="finish" id="finish" value='export' disabled> Експортиране </button>
-</form>
 
 
 <script src="{% static "build/js/js-cookie.js"%}"></script>

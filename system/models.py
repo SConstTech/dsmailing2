@@ -44,12 +44,18 @@ class Letters(DynamicDocument):
 
     '''
     value = ListField(EmbeddedDocumentField(Letters_values))
+    # barcode = StringField(unique=True)
     status = ListField(EmbeddedDocumentField(Delivery))
     print_date = DateTimeField()
     status_date = DateTimeField()
     client = ReferenceField(Clients)
     operatorMarked = IntField()
 
+    meta  ={
+        'indexes': [
+            'barcode'
+        ]
+    }
     # TODO: Fix the scoping
     # def find_letter(self, name, value):
     #     return self.value.get(value = value, name=name)

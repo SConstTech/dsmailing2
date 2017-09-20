@@ -159,46 +159,24 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     template_name = 'letters/barcode-checker.html'
 
     def post(self, request):
-        # TODO: find posted barcode in the base and mark it as undelivered with the posted reason
         # return Status OK (200), JSON {Letter information}
-        finish_button = request.POST.get('finish', False)
-        if finish_button:
-            barcode_list = request.POST.get('barcodes', False)
-            if barcode_list:
-                response = HttpResponse(content_type='text/csv')
-                response['Content-Disposition'] = 'attachment; filename="export-report.csv"'
-                writer = csv.writer(response, delimiter='\t')
-
-                barcode_list = [x for x in barcode_list.split(',')]
-                letterData = Letters.objects.filter(value__name__in =['barcode','баркод'], value__value__in = barcode_list)
-                if len(letterData):
-                    for letterObj in letterData:
-                        row = []
-                        for letterValue in letterObj.value:
-                            row.extend([letterValue['value']])
-                        row.extend([letterObj.status[-1].status,letterObj.status[-1].reason])
-                        writer.writerow(row)
-                return response
-
-            else:
-                return HttpResponse('bad input', status=404)
-
+        start_time = time.time()
+        print('start values time ---------%s seconds ---------' % (time.time()- start_time))
+        barcode = request.POST.get('barcode', False)
+        cause = request.POST.get('reason', False)
+        lettersObject = Letters.objects.filter(barcode=barcode)
+        # lettersObject = Letters.objects.get(value__name='баркод', value__value=barcode)
+        if lettersObject:
+            lettersObject = lettersObject[0]
+            deliverObject = Delivery(status = 'Недоставено', reason = cause)
+            lettersObject.status = [deliverObject]
+            lettersObject.operatorMarked = request.user.id
+            lettersObject.status_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0)
+            lettersObject.save()
+            print('return values time ---------%s seconds ---------' % (time.time() - start_time))
+            return HttpResponse ('OK', status=200)
         else:
-            barcode = request.POST.get('barcode', False)
-            cause = request.POST.get('reason', False)
-            lettersObject = Letters.objects.filter(value__name__in=['barcode', 'баркод'], value__value=barcode)
-                # lettersObject = Letters.objects.get(value__name='баркод', value__value=barcode)
-            if lettersObject:
-                lettersObject = lettersObject[0]
-                deliverObject = Delivery(status = 'Undelivered', reason = cause)
-                lettersObject.status = [deliverObject]
-                lettersObject.operatorMarked = request.user.id
-                lettersObject.status_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0)
-                lettersObject.save()
-
-                return HttpResponse ('OK', status=200)
-            else:
-                return HttpResponse('bad input', status=204)
+            return HttpResponse('bad input', status=204)
         
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
@@ -236,7 +214,7 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         lettersData = Letters.objects.filter(client=clientID, status_date__gte=substract_date)
 
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="%s-report-today.csv"' %clientObject.name
+        response['Content-Disposition'] = u'attachment; filename="report-today.csv"'
         writer = csv.writer(response, delimiter='\t')
 
         for letterObj in lettersData:
@@ -245,7 +223,6 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
                 row.extend([letterValue['value']])
             row.extend([letterObj.status[-1].status, letterObj.status[-1].reason])
             writer.writerow(row)
-
 
         return response
 
