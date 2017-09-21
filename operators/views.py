@@ -77,23 +77,14 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
         current_client = Clients.objects.get(id=client)
         if mainlist:
             save_list = []
-            # barcode_list = []
-            # temp = Letters.objects.all().values_list('value')
-            #
-            # for eachList in temp:
-            #     for eachItem in eachList:
-            #         if eachItem.name == 'баркод' or eachItem.name == 'barcode':
-            #             barcode_list.append(eachItem.value)
             print ('Build barcode_list time ---------%s seconds ---------' %(time.time() - start_time))
-
             for eachRecord in mainlist:
                 to_save = True
                 letter = Letters(print_date=datetime.datetime.now())
                 value = []
                 for eachValue in eachRecord:
-                    # if eachValue['name'] == 'barcode' or eachValue['name'] == 'баркод':
-                    #     if eachValue['value'] in barcode_list:
-                    #         to_save = False
+                    if eachValue['name'] == 'barcode' or eachValue['name'] == 'баркод':
+                        letter.barcode = eachValue['value']
                     letters_valuesObject = Letters_values(**eachValue)
                     value.append(letters_valuesObject)
                 # if to_save:
