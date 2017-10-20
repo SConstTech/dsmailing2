@@ -2,13 +2,12 @@
 {% load static %}
 {% block content %}
 
-
     <h1 align='center'>Изберете период за експортиране</h1>
     <div class="alert alert-info">
       <strong>Info!</strong> Резултата от експортирането ще бъде csv файл.
     </div>
 
-    <div class="container-fluid">
+    <div class="x_panel">
         <form method="post" class="form-group">
         {% csrf_token %}
             <label for="clientName"> Избери клиент:</label>
@@ -20,19 +19,42 @@
                 {% endfor %}
             </select>
             <hr>
-            <label for="period"> Избери период:</label>
-            <div class="row" name="period" id="period">
-                <div class="col-md-2"></div>
-                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="1">от вчера</button>
-                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="0">Днес</button>
-                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="8">Последните 7 дни</button>
-                <button class="btn btn-primary col-md-2 days" type='submit' name="days" value="31">Последните 30 дни</button>
+            <div class="row" >
+                <div class="col-lg-6" id="period">
+                    <label> Избери период:</label>
+                    <div>
+                        <button class="btn btn-primary days" type='submit' name="days" value="1">от вчера</button>
+                        <button class="btn btn-primary days" type='submit' name="days" value="0">Днес</button>
+                        <button class="btn btn-primary days" type='submit' name="days" value="8">Последните 7 дни</button>
+                        <button class="btn btn-primary days" type='submit' name="days" value="31">Последните 30 дни</button>
+                    </div>
+
+                </div>
+                <div class="col-lg-6">
+                    <label> Избери дати:</label>
+
+                    <input type="text" name="request_dates" id="request_dates" class="form-control" value="01/01/2017 - 01/01/2017">
+                    <button class="form-control btn btn-block btn-primary">Избери датите</button>
+                </div>
             </div>
         </form>
+
     </div>
+{% block js_import %}
+    {{ block.super }}
+    <script>
+    $('#request_dates').daterangepicker({
+        timePicker: false,
+        startDate: new Date(),
+        endDate: new Date(),
+        autoUpdateInput: true,
+        locale: {
+            format: 'DD/MM/YYYY'
+        }
+    });
 
-<script>
 
-</script>
+    </script>
+{% endblock js_import %}
 
 {% endblock %}

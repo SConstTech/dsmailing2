@@ -201,8 +201,14 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         clientID = request.POST.get('client', False)
         clientObject = Clients.objects.get(id=clientID)
         days = int(request.POST.get('days', False))
-        substract_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0) - timedelta(days=days)
-        lettersData = Letters.objects.filter(client=clientID, status_date__gte=substract_date)
+        start_date, end_date = request.POST.get('request_dates', False).split('-')
+        start_date =  datetime.datetime.strptime(start_date.strip(), '%d/%m/%Y')
+        end_date =  datetime.datetime.strptime(end_date.strip(), '%d/%m/%Y')
+        if days:
+            substract_date = datetime.datetime.now().replace(microsecond=0, hour=0, minute=0, second=0) - timedelta(days=days)
+            lettersData = Letters.objects.filter(client=clientID, status_date__gte=substract_date)
+        else:
+            lettersData = Letters.objects.filter(client=clientID, status_date__gt=start_date, status_date__lt=end_date)
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = u'attachment; filename="report-today.csv"'

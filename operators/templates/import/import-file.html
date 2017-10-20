@@ -28,5 +28,8 @@
         {{ Header }}
 
     </div>
+{% block js_import %}
+    {{ block.super }}
+{% endblock js_import %}
 
 {% endblock %}
