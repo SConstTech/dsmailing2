@@ -26,9 +26,12 @@
             <button type="submit" class="btn btn-primary btn-block"> Търси </button>
         </form>
     </div>
+{% block js_import %}
+    {{ block.super }}
 
 <script>
 
 </script>
+    {% endblock js_import %}
 
 {% endblock %}
