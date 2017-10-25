@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'create-project$', ProjectCreate.as_view(), name='create-project'),
     url(r'search-by-info', SearchLetters.as_view(), name='search-by-info'),
     url(r'client-statistics', ClientStatistics.as_view(), name='client-statistics'),
+    url(r'remove-client', RemoveClient.as_view(), name='remove-client'),
     url(r'^$', HomeView.as_view(), name='home'),
 
 ]

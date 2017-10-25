@@ -250,7 +250,6 @@ class SearchLetters(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
                 row.extend(['Не е обработено', 'Не е обработено'])
             writer.writerow(row)
 
-
         return response
 
 class ClientStatistics(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
@@ -271,4 +270,22 @@ class ClientStatistics(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
                               'counter_delivered': counter_delivered})
         context['frontData'] = frontData
         return context
+
+
+class RemoveClient(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = u'paper_operator'
+    template_name = 'administration/remove-client.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(RemoveClient, self).get_context_data(**kwargs)
+        context['allClients'] = Clients.objects()
+        return context
+
+    def post(self, request):
+        clientID = request.POST.get('client', False)
+        clientObject = Clients.objects.get(id=clientID)
+        lettersData = Letters.objects.filter(client=clientID)
+        lettersData.delete()
+        clientObject.delete()
+        return render(request, 'administration/remove-success.html')
 
