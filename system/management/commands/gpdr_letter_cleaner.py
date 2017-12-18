@@ -5,7 +5,7 @@ import time, datetime
 # from myapp.models import Book
 
 class Command(BaseCommand):
-    help = 'GPDR Remove records older than 100 days'
+    help = 'GPDR Remove records older than 90 days'
 
     def gpdr_removal(self):
         older_than = datetime.datetime.now() - datetime.timedelta(days=90)
