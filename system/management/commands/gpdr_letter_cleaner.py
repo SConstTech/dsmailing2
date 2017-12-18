@@ -11,14 +11,9 @@ class Command(BaseCommand):
         older_than = datetime.datetime.now() - datetime.timedelta(days=90)
         LettersData = Letters.objects.filter(print_date__lte = older_than).delete()
 
-        print (LettersData)
+        # TODO: Send email with the deleted count (LettersData contains it) to it, iemilov, aasenov
+        # print (LettersData)
 
     def handle(self, *args, **options):
         self.gpdr_removal()
         print ('Done with GPDR removal!')
-
-        # For example:
-        # books = Book.objects.filter(author="bob")
-        # for book in books:
-        #    book.name = "Bob"
-        #    book.save()
