@@ -60,7 +60,6 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # ,
         'APP_DIRS': True,
-        # 'DIRS': [os.path.join(BASE_DIR, 'system/templates')],
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -84,8 +83,8 @@ DATABASES = {
         'NAME': 'dsmailingdb',
         'USER': 'postgres',
         'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -130,7 +129,7 @@ LOGIN_URL = '/system/login'
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATIC_ROOT = os.path.join(BASE_DIR, "collected_static")
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static/"),

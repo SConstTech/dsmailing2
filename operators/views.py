@@ -271,7 +271,6 @@ class ClientStatistics(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         context['frontData'] = frontData
         return context
 
-
 class RemoveClient(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
     template_name = 'administration/remove-client.html'

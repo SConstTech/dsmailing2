@@ -2,16 +2,15 @@ from mongoengine import *
 connect('dsmailing-db')
 from django.utils.translation import ugettext as _
 # raise "Configure the MongoDB URI connection address"
-
+from django.db import models
+from django.contrib.auth.models import User
 
 class Projects(DynamicDocument):
     name = StringField()
 
-
 class Clients(DynamicDocument):
     name = StringField(required=True)
     projects = ListField(ReferenceField(Projects))
-
 
 class Letters_values(DynamicEmbeddedDocument):
     name = StringField()
@@ -66,3 +65,11 @@ class basesImported(DynamicDocument):
     client = StringField()
     filename = StringField()
 
+class clientUser(models.Model):
+    '''
+    role - user, superuser, boss ... something like that ... future TODO:
+    '''
+    user = models.OneToOneField(User,)
+    office = models.CharField(max_length=500, default='')
+    contact = models.CharField(max_length=500, default='')
+    role = models.CharField(max_length=30, default='user')

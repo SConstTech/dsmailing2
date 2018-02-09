@@ -10,7 +10,7 @@ class IndexPageView(RedirectView):
 
     # help functions
     def is_paper_client(self, user):
-        return user.groups.filter(name='paper_client').exists()
+        return user.groups.filter(name='client').exists()
 
     def is_paper_operator(self, user):
         return user.groups.filter(name='paper_operator').exists()
