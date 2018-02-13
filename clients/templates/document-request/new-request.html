@@ -86,18 +86,16 @@
         {{ block.super }}
         <script>
             $('#create_request').on('click', function(){
-                var request_date = $('#request_date').val();
                 var office_number = $('#office_number').val();
                 var protocol_number = $('#protocol_number').val();
 
-                if (request_date === "" || request_date === ""  || office_number === "" ){
+                if (request_date === ""  || office_number === "" ){
                     $('#errorValuesModal').modal();
                 }
                 else{
                     $('#request_create_panel').hide();
                     var params = {
                        'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val(),
-                       'request_date': request_date,
                        'office_number': office_number,
                        'protocol_number': protocol_number,
                     };
