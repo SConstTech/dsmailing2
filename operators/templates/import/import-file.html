@@ -1,35 +1,40 @@
-{% extends "index_operator.html" %}
+{% extends "base_site.html" %}
 {% load static %}
 {% block content %}
 
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
 
-    <h1 align='center'>Импортиране на нова база</h1>
-    <div class="alert alert-info">
-      <strong>Info!</strong> Очаквания файл за импортиране е XLS, задължително с един ред header в който да има barcode.
+        <h1 align='center'>Импортиране на нова база</h1>
+        <div class="alert alert-info">
+            <strong>Info!</strong> Очаквания файл за импортиране е XLS, задължително с един ред header в който да има barcode.
+        </div>
+
+        <div class="x_panel">
+            <form enctype="multipart/form-data" method="post">
+                {% csrf_token %}
+                <select class="form-control" name="client">
+                    {% for eachClient in objects_list %}
+                        <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
+                    {% empty %}
+                        <option>Няма създадени клиенти!</option>
+                    {% endfor %}
+                </select>
+                <br/>
+                <input type="file" name="filename" class="form-control" multiple/>
+                <br/>
+                <button class="btn btn-primary btn-block" name="attach">Прикачи</button>
+
+            </form>
+
+            {{ Header }}
+
+        </div>
     </div>
+    <div class="col-md-4"></div>
 
-    <div class="container start panel">
-        <form enctype="multipart/form-data" method="post">
-            {% csrf_token %}
-              <select class="form-control" name="client">
-                {% for eachClient in objects_list %}
-                    <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
-                {% empty %}
-                    <option>Няма създадени клиенти!</option>
-                {% endfor %}
-              </select>
-            <br/>
-            <input type="file" name="filename" class="form-control" multiple/>
-            <br/>
-            <button class="btn btn-primary" name="attach">Прикачи</button>
-
-        </form>
-
-        {{ Header }}
-
-    </div>
-{% block js_import %}
-    {{ block.super }}
-{% endblock js_import %}
+    {% block js_import %}
+        {{ block.super }}
+    {% endblock js_import %}
 
 {% endblock %}

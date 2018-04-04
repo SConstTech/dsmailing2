@@ -1,34 +1,34 @@
-{% extends "index_operator.html" %}
+{% extends "base_site.html" %}
 {% load static %}
 {% block content %}
+    <div class="col-md-4"></div>
 
-
-<h1 align='center'>Премахване на клиент</h1>
-<div class="alert alert-danger">
-  <strong>ВНИМАНИЕ!</strong> Премахването на клиент премахва и всички писма свързани с него до момента!
-</div>
-
-    <div class="container-fluid">
-        <form method="post" class="form-group">
-        {% csrf_token %}
-            <label for="clientName"> Избери клиент:</label>
-            <select name="client" id="clientName" class="form-control">
-                {% for eachClient in allClients %}
-                    <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
-                {% empty %}
-                    <option>Няма създадени клиенти!</option>
-                {% endfor %}
-            </select>
-            <hr>
-            <button type="submit" class="btn btn-primary btn-block"> Премахни </button>
-        </form>
+    <div class="row col-md-4" align="center">
+        <h1 align='center'>Премахване на клиент</h1>
+        <div class="alert alert-danger">
+            <strong>ВНИМАНИЕ!</strong> Премахването на клиент премахва и всички писма свързани с него до момента!
+        </div>
+        <div class="container-fluid">
+            <form method="post" class="form-group">
+                {% csrf_token %}
+                <label for="clientName"> Избери клиент:</label>
+                <select name="client" id="clientName" class="form-control">
+                    {% for eachClient in allClients %}
+                        <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
+                    {% empty %}
+                        <option>Няма създадени клиенти!</option>
+                    {% endfor %}
+                </select>
+                <hr>
+                <button type="submit" class="btn btn-primary btn-block"> Премахни </button>
+            </form>
+        </div>
     </div>
-{% block js_import %}
-    {{ block.super }}
+    <div class="col-md-4"></div>
 
-<script>
 
-</script>
+    {% block js_import %}
+        {{ block.super }}
     {% endblock js_import %}
 
 {% endblock %}

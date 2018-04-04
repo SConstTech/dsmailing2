@@ -11,23 +11,24 @@ from django.http import HttpResponse
 import time
 
 
-class newDocumentRequest(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
-    group_required = 'client'
-    template_name='document-request/new-request.html'
+# class newDocumentRequest(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+#     group_required = 'client'
+#     template_name='client/document-request/new-request.html'
+#
+# class addDocumentToRequest(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+#     group_required = 'client'
+#     template_name='client/home_client.html'
+#
+# class requestProcessingStatus(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+#     group_required = 'client'
+#     template_name = 'client/home_client.html'
+#
+# class requestEdit(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+#     group_required = 'client'
+#     template_name = 'client/home_client.html'
+#
+# class requestCancel(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+#     group_required = 'client'
+#     template_name = 'client/home_client.html'
 
-class addDocumentToRequest(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
-    group_required = 'client'
-    template_name='home_client.html'
-
-class requestProcessingStatus(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
-    group_required = 'client'
-    template_name = 'home_client.html'
-
-class requestEdit(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
-    group_required = 'client'
-    template_name = 'home_client.html'
-
-class requestCancel(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
-    group_required = 'client'
-    template_name = 'home_client.html'
 

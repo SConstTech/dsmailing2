@@ -1,19 +1,33 @@
-{% extends "index_operator.html" %}
+{% extends "base_site.html" %}
 {% load static %}
 {% block content %}
-    <h1 align='center'>Създаване на нов клиент</h1>
-    <div class="container start panel">
-        <form enctype="multipart/form-data" method="post">
-            {% csrf_token %}
-            <label for="clientname">Име на клиент</label>
-            <input type="text" id="clientname" name="clientname" class="form-control"/>
-            <br/>
-            <button class="btn btn-primary" name="create">Създай</button>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
 
-        </form>
+            <h1 align='center'>Създаване на нов клиент</h1>
+            <div class="x_panel">
+                <div class="x_content">
 
-        {{ Header }}
+                <form enctype="multipart/form-data" method="post">
+                    {% csrf_token %}
+                    <label for="clientname">Име на клиент</label>
+                    <input type="text" id="clientname" name="clientname" class="form-control"/>
+                    <br/>
+                    <button class="btn btn-primary" name="create">Създай</button>
+
+                </form>
+                </div>
+
+                {{ Header }}
+            </div>
+        </div>
+        <div class="col-md-4"></div>
 
     </div>
+    {% block js_import %}
+        {{ block.super }}
+    {% endblock %}
 
 {% endblock %}
+

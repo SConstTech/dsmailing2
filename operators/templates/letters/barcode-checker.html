@@ -1,98 +1,101 @@
-{% extends "index_operator.html" %}
+{% extends "base_site.html" %}
 {% load static %}
 {% block content %}
-    <div class="container start panel" id="app">
-    <h1 align='center'>Отбелязване на причини за недоставяне</h1>
-            <h2 align='center'>Причина за недоставяне</h2>
-            <select class="form-control" id='reason'>
-                <option>Получателят отказва да получи пратката</option>
-                <option>Пратката не е потърсена от получателя</option>
-                <option>Получателят отсъства</option>
-                <option>Получателят се е преместил на друг адрес</option>
-                <option>Адресът вече не съществува</option>
-                <option>Получателят непознат на посочения адрес</option>
-                <option>Починал</option>
-                <option>Непълен адрес на получателя</option>
-            </select>
+
+    <div class="col-md-3"></div>
+    <div class="col-md-6">
+        <h1 align='center'>Отбелязване на причини за недоставяне</h1>
+        <label for="reason">Причина за недоставяне:</label>
+        <select class="form-control" id='reason'>
+            <option>Получателят отказва да получи пратката</option>
+            <option>Пратката не е потърсена от получателя</option>
+            <option>Получателят отсъства</option>
+            <option>Получателят се е преместил на друг адрес</option>
+            <option>Адресът вече не съществува</option>
+            <option>Получателят непознат на посочения адрес</option>
+            <option>Починал</option>
+            <option>Непълен адрес на получателя</option>
+        </select>
         {% csrf_token %}
-            <input type="text" id="barcode" name="barcode" class="form-control" autofocus/>
-            <br/>
+        <label for="barcode">Баркод:</label>
+        <input type="text" id="barcode" name="barcode" class="form-control" autofocus/>
+        <br/>
     </div>
-<div class='container start panel'>
-<ul id='added_list'>
+    <div class='x_panel'>
+        <ul id='added_list'>
 
-</ul>
-</div>
+        </ul>
+    </div>
+    </div>
+    <div class="col-md-3"></div>
+    {% block js_import %}
+        {{ block.super }}
+    {% endblock js_import %}
 
-{% block js_import %}
-    {{ block.super }}
-
-
-<script>
-$(document).ready(function(){
-    $.fn.enterKey = function (fnc) {
-        return this.each(function () {
-            $(this).keypress(function (ev) {
-                var keycode = (ev.keyCode ? ev.keyCode : ev.which);
-                if (keycode == '13') {
-                    fnc.call(this, ev);
-                }
-            })
-        })
-    }
-    var added_list = [];
-    $("#barcode").enterKey(function(e){
-        var barcode_value = $('#barcode').val();
-        var reason_value = $('#reason').val();
-        if (barcode_value != ''){
-            $.post("/operator/barcode-checker",
-                {
-                    csrfmiddlewaretoken: Cookies('csrftoken'),
-                    barcode:  barcode_value,
-                    reason: reason_value
-                },
-                function(data, status){
-                    if (status === 'success'){
-                        added_list.push($('#barcode').val());
-                        $('#barcode').val('');
-                        $('#barcode').focus();
-                        $('#barcodes').val(added_list);
-                        $('ul').empty();
-                        for (var i=added_list.length-5; i< added_list.length; i++){
-                                $('#added_list').append("<button class='btn remove'>" + added_list[i] + "</button>");
+    <script>
+        $(document).ready(function(){
+            $.fn.enterKey = function (fnc) {
+                return this.each(function () {
+                    $(this).keypress(function (ev) {
+                        var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+                        if (keycode == '13') {
+                            fnc.call(this, ev);
                         }
-                        $('#finish').attr('disabled', false);
-                        $('#finish').attr('class', 'btn btn-success btn-block');
-                    }
-                    else{
-                        alert('Записа не е записан успешно - липсва запис в базата или не е прочетен правилно от четеца!');
-                        $('#barcode').val('');
-                        $('#barcode').focus();
-                    }
-                });
-        }
-        else{
-            $('#barcode').val('');
-            $('#barcode').focus();
-        }
-    });
-    $('#finish').on('click', function(){
-        var disabled_finish = $('#finish').attr('disabled');
-        var barcode_list = $('#added').text();
-        if (added_list.length > 0){
-            $.post("/operator/barcode-checker",
-                {
-                    csrfmiddlewaretoken: Cookies('csrftoken'),
-                    barcodes:  barcode_list,
-                    finish: 'yes'
-                },
-                function(data, status){
-                    console.log(data);
-                });
-        }
-    });
-});
-</script>
-{% endblock js_import %}
+                    })
+                })
+            }
+            var added_list = [];
+            $("#barcode").enterKey(function(e){
+                var barcode_value = $('#barcode').val();
+                var reason_value = $('#reason').val();
+                if (barcode_value != ''){
+                    $.post("/operator/barcode-checker",
+                        {
+                            csrfmiddlewaretoken: Cookies('csrftoken'),
+                            barcode:  barcode_value,
+                            reason: reason_value
+                        },
+                        function(data, status){
+                            if (status === 'success'){
+                                added_list.push($('#barcode').val());
+                                $('#barcode').val('');
+                                $('#barcode').focus();
+                                $('#barcodes').val(added_list);
+                                $('ul').empty();
+                                for (var i=added_list.length-5; i< added_list.length; i++){
+                                    $('#added_list').append("<button class='btn remove'>" + added_list[i] + "</button>");
+                                }
+                                $('#finish').attr('disabled', false);
+                                $('#finish').attr('class', 'btn btn-success btn-block');
+                            }
+                            else{
+                                alert('Записа не е записан успешно - липсва запис в базата или не е прочетен правилно от четеца!');
+                                $('#barcode').val('');
+                                $('#barcode').focus();
+                            }
+                        });
+                }
+                else{
+                    $('#barcode').val('');
+                    $('#barcode').focus();
+                }
+            });
+            $('#finish').on('click', function(){
+                var disabled_finish = $('#finish').attr('disabled');
+                var barcode_list = $('#added').text();
+                if (added_list.length > 0){
+                    $.post("/operator/barcode-checker",
+                        {
+                            csrfmiddlewaretoken: Cookies('csrftoken'),
+                            barcodes:  barcode_list,
+                            finish: 'yes'
+                        },
+                        function(data, status){
+                            console.log(data);
+                        });
+                }
+            });
+        });
+    </script>
 
 {% endblock %}
