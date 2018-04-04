@@ -1,0 +1,31 @@
+{% extends "operators/base_site.html" %}
+{% load static %}
+{% block content %}
+
+
+    <h1 align='center'>Импортиране на нова база</h1>
+
+    <div class="container start panel">
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+              <select class="form-control" name="client">
+                {% for eachClient in objects_list %}
+                    <option value="{{ eachClient.id }}">{{ eachClient.name }}</option>
+                {% empty %}
+                    <option>No clients</option>
+                {% endfor %}
+
+
+              </select>
+            <br/>
+            <input type="file" name="filename" class="form-control"/>
+            <br/>
+            <button class="btn btn-primary" name="attach">Прикачи</button>
+
+        </form>
+
+        {{ Header }}
+
+    </div>
+
+{% endblock %}

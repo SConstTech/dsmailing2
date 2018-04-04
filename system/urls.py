@@ -14,8 +14,8 @@ from system.views import *
 
 
 urlpatterns = [
-    url(r'login$', auth_views.login, {'template_name':'login.html'}, name='login'),
+    url(r'login$', auth_views.login, {'template_name':'system/login.html'}, name='login'),
     url(r'logout$', auth_views.logout,  {'next_page': '/'}, name='logout'),
-    url(r'home$', TemplateView.as_view(template_name='home.html'), name='home'),
+    url(r'home$', TemplateView.as_view(template_name='system/base_site.html'), name='home'),
     url(r'$', IndexPageView.as_view(), name='index'),
 ]

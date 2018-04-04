@@ -1,0 +1,25 @@
+{% extends "operators/base_site.html" %}
+{% load static %}
+{% block content %}
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <form method="post">
+            {% csrf_token %}
+              <select class="form-control" name="clientname">
+                {% for eachClient in object_list %}
+                    <option value="{{ eachClient.name }}">{{ eachClient.name }}</option>
+                {% empty %}
+                    <option>No clients</option>
+                {% endfor %}
+
+              </select>
+            <br/>
+            <input type="text" name="projectname" class="form-control"/>
+            <br/>
+            <button class="btn btn-primary" name="attach">Създай проект</button>
+        </form>
+    </div>
+        <div class="col-md-4"></div>
+
+
+{% endblock %}

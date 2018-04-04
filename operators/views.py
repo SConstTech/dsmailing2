@@ -11,7 +11,7 @@ import time
 
 class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
-    template_name = 'import/import-file.html'
+    template_name = 'operators/import/import-file.html'
     context_object_name = 'objects_list'
     queryset = Clients.objects
 
@@ -28,10 +28,10 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
                     if status:
                         baseImportObject = basesImported(dateImported=datetime.datetime.now(), client=client, filename=filename).save()
                     else:
-                        return render(request, 'import/error.html', context={'msg': 'Проблем при зареждането на файла'})
+                        return render(request, 'operators/import/error.html', context={'msg': 'Проблем при зареждането на файла'})
                 else:
-                    return render(request, 'import/error.html', context={'msg': 'Некоректен файл'})
-            return render(request, 'import/success.html')
+                    return render(request, 'operators/import/error.html', context={'msg': 'Некоректен файл'})
+            return render(request, 'operators/import/success.html')
 
     def xls_reader(self, uploaded_file, filename):
         try:
@@ -105,11 +105,11 @@ class FileImport(LoginRequiredMixin, GroupRequiredMixin, ListView ):
 
 class HomeView(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = 'paper_operator'
-    template_name='home_operator.html'
+    template_name='operators/home_operator.html'
 
 class PreviewView(LoginRequiredMixin, GroupRequiredMixin, ListView):
     group_required = 'paper_operator'
-    template_name='preview/preview.html'
+    template_name='operators/preview/preview.html'
     context_object_name = 'frontData'
     queryset = Letters.objects
     paginate_by = 100
@@ -130,7 +130,7 @@ class PreviewView(LoginRequiredMixin, GroupRequiredMixin, ListView):
 
 class ClientCreate(LoginRequiredMixin, GroupRequiredMixin, TemplateView ):
     group_required = u'paper_operator'
-    template_name = 'clients/clients-create.html'
+    template_name = 'operators/clients/clients-create.html'
     # context_object_name = 'objects_list'
     # queryset = Clients.objects
 
@@ -147,7 +147,7 @@ class ClientCreate(LoginRequiredMixin, GroupRequiredMixin, TemplateView ):
 
 class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
-    template_name = 'letters/barcode-checker.html'
+    template_name = 'operators/letters/barcode-checker.html'
 
     def post(self, request):
         # return Status OK (200), JSON {Letter information}
@@ -171,7 +171,7 @@ class BarcodeChecker(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         
 class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
     group_required = u'paper_operator'
-    template_name = 'clients/project-create.html'
+    template_name = 'operators/clients/project-create.html'
     queryset = Clients.objects
 
     def post(self,request):
@@ -184,13 +184,13 @@ class ProjectCreate(LoginRequiredMixin, GroupRequiredMixin, ListView ):
             tempProjectObject.save()
             clientObject.projects.append(tempProjectObject)
             clientObject.save()
-            return render(request, 'clients/success.html')
+            return render(request, 'operators/clients/success.html')
         else:
-            return render(request, 'clients/error.html')
+            return render(request, 'operators/clients/error.html')
 
 class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
-    template_name = 'queries/export_by_date.html'
+    template_name = 'operators/queries/export_by_date.html'
 
     def get_context_data(self, **kwargs):
         context = super(ExportReport, self).get_context_data(**kwargs)
@@ -225,7 +225,7 @@ class ExportReport(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
 class SearchLetters(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
-    template_name = 'queries/search-letters.html'
+    template_name = 'operators/queries/search-letters.html'
 
     def get_context_data(self, **kwargs):
         context = super(SearchLetters, self).get_context_data(**kwargs)
@@ -254,7 +254,7 @@ class SearchLetters(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
 class ClientStatistics(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
-    template_name = 'queries/client-statistics.html'
+    template_name = 'operators/queries/client-statistics.html'
 
     def get_context_data(self, **kwargs):
         context = super(ClientStatistics, self).get_context_data(**kwargs)
@@ -273,7 +273,7 @@ class ClientStatistics(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
 
 class RemoveClient(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
     group_required = u'paper_operator'
-    template_name = 'administration/remove-client.html'
+    template_name = 'operators/administration/remove-client.html'
 
     def get_context_data(self, **kwargs):
         context = super(RemoveClient, self).get_context_data(**kwargs)
@@ -286,5 +286,5 @@ class RemoveClient(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
         lettersData = Letters.objects.filter(client=clientID)
         lettersData.delete()
         clientObject.delete()
-        return render(request, 'administration/remove-success.html')
+        return render(request, 'operators/administration/remove-success.html')
 

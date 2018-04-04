@@ -31,4 +31,24 @@ import time
 #     group_required = 'client'
 #     template_name = 'client/home_client.html'
 
+class NewRequest(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = 'client'
+    http_method_names = ['GET']
+    template_name = 'client/new-request.html'
 
+class CancelRequest(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = 'client'
+    template_name = 'client/home_client.html'
+
+class TrackProgress(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = 'client'
+    template_name = 'client/home_client.html'
+
+class itemAdd(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = 'client'
+    template_name = 'client/home_client.html'
+
+
+class itemRemove(LoginRequiredMixin, GroupRequiredMixin, TemplateView):
+    group_required = 'client'
+    template_name = 'client/home_client.html'

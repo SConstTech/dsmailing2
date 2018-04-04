@@ -5,7 +5,18 @@
         </div>
 
         <div class="clearfix"></div>
-        <br />
+        <!-- menu profile quick info -->
+        <div class="profile clearfix">
+            <div class="profile_pic">
+                <img src="/static/images/img.jpg" alt="..." class="img-circle profile_img">
+            </div>
+            <div class="profile_info">
+                <span>Потребител:</span>
+                <h2>{{ user.get_username }}</h2>
+            </div>
+        </div>
+        <br/>
+        <!-- /menu profile quick info -->
         <!-- sidebar menu -->
         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             <div class="menu_section">
@@ -19,13 +30,13 @@
                     </li>
                     <li><a><i class="fa fa-desktop"></i> Справки <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="{% url 'clients:request-processing-status' %}">Изпълнение на заявката</a></li>
+                            <li><a href="{% url 'clients:track-progress' %}">Статус на заявките</a></li>
                         </ul>
                     </li>
-                    <li><a><i class="fa fa-edit"></i> Служебни менюта <span class="fa fa-chevron-down"></span></a>
+                    <li><a><i class="fa fa-edit"></i> Административно меню <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="{% url 'clients:request-edit' %}">Редактиране на заявка</a></li>
-                            <li><a href="{% url 'clients:request-cancel' %}">Отказване на заявка</a></li>
+                            <li><a href="{% url 'clients:item-add' %}">Добавяне на артикули</a></li>
+                            <li><a href="{% url 'clients:item-remove' %}">Премахване на артикули</a></li>
                         </ul>
                     </li>
                 </ul>

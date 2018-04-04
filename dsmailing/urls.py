@@ -24,6 +24,6 @@ urlpatterns = [
     url(r'^clients/', include('clients.urls', namespace='clients')),
     url(r'^operator/', include('operators.urls', namespace='operators')),
     url(r'^system/', include('system.urls', namespace='system')),
-    url(r'^$', TemplateView.as_view(template_name='home.html')),
+    url(r'^$', TemplateView.as_view(template_name='system/base_site.html')),
 
 ]

@@ -21,7 +21,8 @@ urlpatterns = [
     url(r'new-request/$', client_views.NewRequest.as_view(), name='new-request'),
     url(r'cancel-request/$', client_views.CancelRequest.as_view(), name='cancel-request'),
     url(r'track-progress/$', client_views.TrackProgress.as_view(), name='track-progress'),
-    # url(r'request-edit/$', client_views.requestEdit.as_view(), name='request-edit'),
+    url(r'item-add/$', client_views.itemAdd.as_view(), name='item-add'),
+    url(r'item-remove/$', client_views.itemRemove.as_view(), name='item-remove'),
     # url(r'request-cancel/$', client_views.requestCancel.as_view(), name='request-cancel'),
 ]
 

@@ -24,7 +24,6 @@ class IndexPageView(RedirectView):
             elif self.is_paper_operator(self.request.user): #and not is_admin(request.user):
                 return reverse('operators:home')
             else:
-                print ('here')
                 return reverse('system:home')
 
 
