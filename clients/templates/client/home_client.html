@@ -1,16 +1,230 @@
 {% extends "client/base_site.html" %}
 {% load static %}
-{% block content %}
-    <!-- top tiles -->
-    <div class="right_col" role="main">
 
-        <div class="row">
-            <h1>PAGE 1</h1>
-        </div>
-        <!-- /top tiles -->
-        Ихуууу
-    </div>
-    {% block js_import %}
-        {{ block.super }}
-    {% endblock js_import %}
+{% block stylesheets %}
+    {{ block.super }}
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
 {% endblock %}
+{% block content %}
+    <!-- page content -->
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                <h3>Списък на заявките</h3>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2></h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="col-md-offset-10 col-md-2">
+                        <button class="btn btn-block btn-success"
+                                data-toggle="modal"
+                                data-target=".bs-create-items-modal-lg">
+                            <i class="fa fa-plus-circle"></i> Създай заявка</button>
+                    </div>
+
+                    <div class="x_content">
+
+                        <div class="table-responsive">
+                            <table id='request_table' class="table table-striped">
+                                <thead>
+                                <tr class="headings">
+                                    <th class="column-title">Номер на заявка </th>
+                                    <th class="column-title">Дата на заявка </th>
+                                    <th class="column-title">Заявител </th>
+                                    <th class="column-title">Артикул </th>
+                                    <th class="column-title">Крайна цена </th>
+                                    <th class="column-title">Статус</th>
+                                    <th class="column-title">Действия</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr class="even pointer">
+                                    <td>00019230</td>
+                                    <td>May 23, 2014 11:47:56 PM </td>
+                                    <td>Пеньо</td>
+                                    <td> <button class="items btn btn-primary"
+                                                 data-toggle="modal"
+                                                 data-target=".bs-items-modal-lg">Артикули</button></td>
+                                    <td>крайна цена</td>
+                                    <td>текущ статус</td>
+                                    <td>
+                                        <button class='btn btn-danger btn-block'
+                                                data-toggle="modal"
+                                                data-target=".bs-cancel-confirm-modal-sm">Откажи</button>
+                                    </td>
+                                </tr>
+                                <tr class="odd pointer">
+                                    <td>00019230</td>
+                                    <td>May 23, 2014 11:47:56 PM </td>
+                                    <td> Пеньо</td>
+                                    <td> <button class="items btn btn-primary"
+                                                 data-toggle="modal"
+                                                 data-target=".bs-items-modal-lg">Артикули</button></td>
+                                    <td>крайна цена</td>
+                                    <td>текущ статус</td>
+                                    <td>
+                                        <button class='btn btn-danger btn-block'
+                                                data-toggle="modal"
+                                                data-target=".bs-cancel-confirm-modal-sm">Откажи</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /page content -->
+
+    <div class="modal fade bs-items-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Детайли на поръчаните артикули</h4>
+                </div>
+                <div class="modal-body">
+                    <table id='request_table' class="table table-striped">
+                        <thead>
+                        <tr class="headings">
+                            <th class="column-title">Вид артикул </th>
+                            <th class="column-title">Бройка </th>
+                            <th class="column-title">Статус</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr class="even pointer">
+                            <td>Артикул 1 </td>
+                            <td>12</td>
+                            <td>текущ статус</td>
+                        </tr>
+                        <tr class="even pointer">
+                            <td>Артикул 2 </td>
+                            <td>25</td>
+                            <td>текущ статус</td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-create-items-modal-lg" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Създаване на заявка</h4>
+                </div>
+                <div class="modal-body" id="new-request-items">
+                    <div class="row" id="base">
+                        <div class="col-md-12 child">
+                            <div class="col-md-4">
+                                <label for="selected_item">Изберете артикул
+                                    <select name="items" class="form-control">
+                                        <option value="Артикул 1">Артикул 1</option>
+                                        <option value="Артикул 2">Артикул 2</option>
+                                        <option value="Артикул 3">Артикул 3</option>
+                                    </select>
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="item_count">Въведете брой на изделия
+                                    <input type="text" class="form-control" name="item_count"/>
+                                </label>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="add-new">.
+                                    <button class="add-new btn btn-primary" id="add-new"> <i class="fa fa-plus-circle"></i> Добави артикул</button>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Затвори</button>
+                    <button type="button" class="btn btn-primary">Създай</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade bs-cancel-confirm-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel2">Отказване на поръчка</h4>
+                </div>
+                <div class="modal-body">
+                    <h4>Сигурни ли сте, че искате да откажете поръчката ?</h4>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger">Да</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Не</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+{% block js_import %}
+    {{ block.super }}
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script>
+        $('#request_table').DataTable({
+            "lengthChange": false,
+            language: {
+                processing:     "Данните се зареждат...",
+                search:         "Търсене:",
+                zeroRecords:    "Няма записи в базата",
+                emptyTable:     "Таблицата е празна",
+                paginate: {
+                    first:      "Първа",
+                    previous:   "Следваща",
+                    next:       "Предишна",
+                    last:       "Последна"
+                },
+                aria: {
+                    sortAscending:  "Сортирай възходящо",
+                    sortDescending: "Сортирай низходящо"
+                }
+            }});
+
+        $('#add-new').on('click', function(){
+            var child_element = $('.child');
+            var base= $('#base');
+            $('.child').appendTo($('#base'));
+
+        })
+    </script>
+
+{% endblock js_import%}

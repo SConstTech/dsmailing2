@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'GPDR Remove records older than 90 days'
 
     def gpdr_removal(self):
-        older_than = datetime.datetime.now() - datetime.timedelta(days=90)
+        older_than = datetime.datetime.now() - datetime.timedelta(days=180)
         LettersData = Letters.objects.filter(print_date__lte = older_than).delete()
 
         # TODO: Send email with the deleted count (LettersData contains it) to it, iemilov, aasenov
